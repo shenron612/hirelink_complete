@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HireLink – Find Work. Hire Smart.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<style>
+/* ── BELL ── */
+.bell-wrap{position:relative;cursor:pointer;padding:8px;border-radius:8px;transition:background 0.2s;}
+.bell-wrap:hover{background:var(--card);}
+.bell-icon{font-size:1.3rem;}
+.bell-badge{position:absolute;top:2px;right:2px;background:#ef5350;color:#fff;font-size:0.65rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.bell-dropdown{display:none;position:absolute;top:48px;right:0;width:320px;background:var(--dark);border:1px solid var(--border);border-radius:14px;z-index:300;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.bell-dropdown.open{display:block;}
+.bell-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:0.9rem;}
+.bell-notif-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s;}
+.bell-notif-item:hover{background:rgba(245,200,0,0.05);}
+.bell-notif-item:last-child{border-bottom:none;}
+.bell-notif-title{font-size:0.85rem;font-weight:600;margin-bottom:2px;}
+.bell-notif-body{font-size:0.78rem;color:var(--muted);}
+.bell-notif-time{font-size:0.7rem;color:var(--muted);margin-top:4px;}
+
+/* ── PROFILE TRIGGER ── */
+.profile-trigger{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;cursor:pointer;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.2s;}
+.profile-trigger:hover{border-color:var(--yellow);}
+.pt-avatar{width:28px;height:28px;border-radius:50%;background:var(--yellow);color:var(--black);font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* ── PROFILE PANEL ── */
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:400;backdrop-filter:blur(4px);}
+.panel-overlay.open{display:block;}
+.profile-panel{position:fixed;top:0;right:-380px;width:360px;height:100vh;background:var(--dark);border-left:1px solid var(--border);z-index:401;transition:right 0.3s ease;display:flex;flex-direction:column;overflow-y:auto;}
+.profile-panel.open{right:0;}
+.panel-close{position:absolute;top:16px;right:16px;background:var(--card);border:none;color:var(--white);width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:1;}
+.panel-head{display:flex;align-items:center;gap:14px;padding:32px 20px 20px;border-bottom:1px solid var(--border);}
+.panel-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:var(--black);flex-shrink:0;}
+.panel-name{font-weight:700;font-size:1rem;margin-bottom:2px;}
+.panel-role{font-size:0.8rem;color:var(--yellow);font-weight:600;}
+.panel-email{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+.panel-status{padding:16px 20px;border-bottom:1px solid var(--border);}
+.panel-section-label{font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px;}
+.status-toggle-row{display:flex;gap:8px;}
+.stbtn{flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.stbtn-active{background:rgba(76,175,80,0.15);color:#4caf50;border-color:#4caf50;}
+.stbtn-off{background:rgba(239,83,80,0.1);color:#ef5350;border-color:rgba(239,83,80,0.3);}
+.panel-stats{display:flex;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
+.panel-stat{flex:1;background:var(--card);border-radius:10px;padding:14px;text-align:center;}
+.ps-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--yellow);}
+.ps-lbl{font-size:0.72rem;color:var(--muted);}
+.panel-links{display:flex;flex-direction:column;padding:12px 20px;gap:4px;}
+.panel-link{padding:12px 14px;border-radius:10px;color:var(--white);text-decoration:none;font-size:0.9rem;font-weight:500;transition:background 0.2s;display:flex;align-items:center;gap:10px;}
+.panel-link:hover{background:rgba(245,200,0,0.07);color:var(--yellow);}
+
+/* ── SEARCH section always visible ── */
+.worker-search{padding:100px 5% 60px;background:var(--dark);border-bottom:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">Hire<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#browse">Browse Talent</a></li>
+    <li><a href="#all-profiles">All Profiles</a></li>
+    <li><a href="/hirelink-care/">HireLink Care</a></li>
+    {% if not user.is_authenticated %}<li><a href="#profile">Profile</a></li>{% endif %}
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+      <div class="bell-wrap" onclick="toggleBellDropdown()">
+        <span class="bell-icon">🔔</span>
+        <span class="bell-badge" id="bellBadge" style="display:none;">0</span>
+        <div class="bell-dropdown" id="bellDropdown">
+          <div class="bell-header">
+            <span>Notifications</span>
+            <a href="/notifications/" style="font-size:0.78rem;color:var(--yellow);">See all</a>
+          </div>
+          <div id="bellList"><div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem;">Loading...</div></div>
+        </div>
+      </div>
+      <button class="profile-trigger" onclick="openProfilePanel()">
+        <div class="pt-avatar">{{ user.full_name|slice:":2"|upper }}</div>
+        <span>{{ user.full_name|truncatechars:12 }}</span>
+      </button>
+    {% else %}
+      <button class="btn-outline" onclick="openModal('login')">Sign In</button>
+      <button class="btn-yellow" onclick="openModal('register')">Get Started</button>
+    {% endif %}
+  </div>
+</nav>
+
+{% if user.is_authenticated %}
+<div class="panel-overlay" id="panelOverlay" onclick="closeProfilePanel()"></div>
+<div class="profile-panel" id="profilePanel">
+  <button class="panel-close" onclick="closeProfilePanel()">✕</button>
+  <div class="panel-head">
+    <div class="panel-avatar">{{ user.full_name|slice:":2"|upper }}</div>
+    <div>
+      <div class="panel-name">{{ user.full_name }}</div>
+      <div class="panel-role">{% if user.role == "worker" %}🧑 Worker{% else %}💼 Employer{% endif %}</div>
+      <div class="panel-email">{{ user.email }}</div>
+    </div>
+  </div>
+  <div class="panel-status">
+    <div class="panel-section-label">My Status</div>
+    {% if user.role == "worker" %}
+    <div class="status-toggle-row">
+      <button class="stbtn {% if user.status == "available" %}stbtn-active{% endif %}" onclick="setStatus('available')">🟢 Available</button>
+      <button class="stbtn {% if user.status == "unavailable" %}stbtn-off{% endif %}" onclick="setStatus('unavailable')">🔴 Unavailable</button>
+    </div>
+    {% else %}
+    <div class="status-toggle-row">
+      <button class="stbtn {% if user.status == "hiring" %}stbtn-active{% endif %}" onclick="setStatus('hiring')">🔵 Hiring</button>
+      <button class="stbtn {% if user.status == "not_hiring" %}stbtn-off{% endif %}" onclick="setStatus('not_hiring')">🔴 Not Hiring</button>
+    </div>
+    {% endif %}
+  </div>
+  <div class="panel-stats">
+    {% if user.role == "employer" %}
+    <div class="panel-stat"><div class="ps-num">{{ user.hired_count }}</div><div class="ps-lbl">Hired</div></div>
+    {% else %}
+    <div class="panel-stat"><div class="ps-num">{{ user.jobs_count }}</div><div class="ps-lbl">Jobs</div></div>
+    {% endif %}
+    <div class="panel-stat"><div class="ps-num" id="panelUnread">-</div><div class="ps-lbl">Unread</div></div>
+  </div>
+  <div class="panel-links">
+    <a href="/notifications/" class="panel-link">🔔 Notifications</a>
+    <a href="/messages/" class="panel-link">💬 Messages</a>
+    <a href="/hirelink-care/" class="panel-link">🛡️ HireLink Care</a>
+    <a href="/report-dispute/" class="panel-link">⚠️ Report Dispute</a>
+  </div>
+  <div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:8px;margin-top:24px;">
+    <a href="/logout/" class="btn-outline" style="text-align:center;text-decoration:none;">Logout</a>
+    <button onclick="openDeleteModal()" style="padding:10px;border-radius:8px;border:1px solid rgba(239,83,80,0.4);background:transparent;color:#ef5350;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;">Delete Account</button>
+  </div>
+</div>
+{% endif %}
+
+<!-- WORKER SEARCH (logged in only) -->
+{% if user.is_authenticated %}
+<section class="worker-search" id="search">
+  <div class="search-container">
+    <h3>🔍 Find a Worker</h3>
+    <p>Search by name, skill or role to find and hire the right person</p>
+    <div class="search-bar">
+      <input type="text" id="workerSearchInput" placeholder="e.g. Plumber, David, Designer..." />
+      <button class="btn-yellow" onclick="searchWorkers()">Search</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</section>
+{% endif %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🚀 <span>10,000+</span> professionals already on HireLink</div>
+  <h1>FIND WORK.<br><em>HIRE SMART.</em></h1>
+  <p>HireLink connects skilled workers with employers who need them. Market yourself, find opportunities, and build your career — all in one place.</p>
+  <div class="hero-actions">
+    <button class="btn-hero btn-hero-primary" onclick="openModal('register')">I'm Looking for Work</button>
+    <button class="btn-hero btn-hero-secondary" onclick="openModal('register')">I'm Hiring Talent</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10K+</div><div class="stat-label">Active Workers</div></div>
+    <div class="stat"><div class="stat-num">3.2K+</div><div class="stat-label">Employers</div></div>
+    <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Match Rate</div></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avg Rating</div></div>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section class="roles">
+  <div class="role-card featured">
+    <div class="role-icon">💼</div>
+    <h3>I'm an Employer</h3>
+    <p>Post jobs, browse vetted talent, and hire with confidence.</p>
+    <ul>
+      <li>Post unlimited job listings</li>
+      <li>Browse worker profiles & portfolios</li>
+      <li>Direct messaging & booking</li>
+      <li>Dispute resolution via HireLink Care</li>
+    </ul>
+  </div>
+  <div class="role-card">
+    <div class="role-icon">🧑‍💻</div>
+    <h3>I'm a Worker</h3>
+    <p>Build your profile, showcase your skills, and get hired.</p>
+    <ul>
+      <li>Create a standout profile</li>
+      <li>Apply to jobs & get discovered</li>
+      <li>Track bookings & earnings</li>
+      <li>Get rated and grow your reputation</li>
+    </ul>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw" id="how">
+  <div class="section-label">The Process</div>
+  <h2 class="section-title">HOW HIRELINK WORKS</h2>
+  <p class="section-sub">Three simple steps to connect workers with the right opportunities.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>Create Your Profile</h4><p>Sign up and set up your profile with skills, experience, or job needs.</p></div>
+    <div class="step"><div class="step-num">2</div><h4>Browse & Connect</h4><p>Workers find jobs. Employers find talent. Use filters to match exactly what you need.</p></div>
+    <div class="step"><div class="step-num">3</div><h4>Book & Get Paid</h4><p>Confirm bookings, complete work, and get paid securely.</p></div>
+    <div class="step"><div class="step-num">4</div><h4>Rate & Grow</h4><p>Leave reviews, build your reputation, and unlock more opportunities.</p></div>
+  </div>
+</section>
+
+<!-- BROWSE TALENT -->
+<section class="browse" id="browse">
+  <div class="browse-header">
+    <div>
+      <div class="section-label">Talent Pool</div>
+      <h2 class="section-title">BROWSE WORKERS</h2>
+    </div>
+    <button class="btn-yellow" onclick="openModal('register')">View All Profiles →</button>
+  </div>
+  <div class="profiles-grid">
+    <div class="profile-card"><div class="profile-avatar">AJ</div><div class="profile-name">Amara Johnson</div><div class="profile-role">Graphic Designer</div><div class="profile-tags"><span class="tag">Branding</span><span class="tag">Figma</span><span class="tag">UI</span></div><div class="profile-rate">From <strong>$45/hr</strong> · ⭐ 4.9</div></div>
+    <div class="profile-card"><div class="profile-avatar">KM</div><div class="profile-name">Kwame Mensah</div><div class="profile-role">Web Developer</div><div class="profile-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">AWS</span></div><div class="profile-rate">From <strong>$65/hr</strong> · ⭐ 5.0</div></div>
+    <div class="profile-card"><div class="profile-avatar">SO</div><div class="profile-name">Sandra Osei</div><div class="profile-role">Marketing Specialist</div><div class="profile-tags"><span class="tag">SEO</span><span class="tag">Ads</span><span class="tag">Content</span></div><div class="profile-rate">From <strong>$38/hr</strong> · ⭐ 4.8</div></div>
+    <div class="profile-card"><div class="profile-avatar">TB</div><div class="profile-name">Tunde Bello</div><div class="profile-role">Plumber</div><div class="profile-tags"><span class="tag">Residential</span><span class="tag">Repairs</span></div><div class="profile-rate">From <strong>$30/hr</strong> · ⭐ 4.7</div></div>
+    <div class="profile-card"><div class="profile-avatar">RA</div><div class="profile-name">Rina Asante</div><div class="profile-role">Accountant</div><div class="profile-tags"><span class="tag">Tax</span><span class="tag">Audit</span><span class="tag">Excel</span></div><div class="profile-rate">From <strong>$50/hr</strong> · ⭐ 4.9</div></div>
+    <div class="profile-card"><div class="profile-avatar">DF</div><div class="profile-name">David Frimpong</div><div class="profile-role">Electrician</div><div class="profile-tags"><span class="tag">Wiring</span><span class="tag">Solar</span><span class="tag">CCTV</span></div><div class="profile-rate">From <strong>$28/hr</strong> · ⭐ 4.8</div></div>
+  </div>
+</section>
+
+<!-- ALL REGISTERED PROFILES -->
+<section class="all-profiles-section" id="all-profiles">
+  <div class="section-label">Community</div>
+  <h2 class="section-title">ALL REGISTERED PROFILES</h2>
+  <p class="section-sub">Every person who has joined HireLink — their skills, rates, and availability.</p>
+
+  {% if profiles %}
+  <div class="all-profiles-grid">
+    {% for p in profiles %}
+    <div class="full-profile-card">
+      <div class="fp-header">
+        <div class="fp-avatar">{{ p.full_name|slice:":2"|upper }}</div>
+        <div class="fp-identity">
+          <div class="fp-name">{{ p.full_name }}</div>
+          <div class="fp-role-badge {% if p.role == 'worker' %}badge-worker{% else %}badge-employer{% endif %}">
+            {% if p.role == 'worker' %}🧑 Worker{% else %}💼 Employer{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="fp-details">
+        {% if p.skills %}
+        <div class="fp-row">
+          <span class="fp-label">🛠 Skills</span>
+          <div class="fp-tags">
+            {% for skill in p.get_skills_list %}
+              <span class="tag">{{ skill }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if p.hourly_wage %}
+        <div class="fp-row">
+          <span class="fp-label">💰 Rate</span>
+          <span class="fp-value">KES {{ p.hourly_wage }}/hr</span>
+        </div>
+        {% endif %}
+
+        {% if p.hours_per_day %}
+        <div class="fp-row">
+          <span class="fp-label">⏱ Hours/day</span>
+          <span class="fp-value">{{ p.hours_per_day }} hrs</span>
+        </div>
+        {% endif %}
+
+        {% if p.working_days %}
+        <div class="fp-row">
+          <span class="fp-label">📅 Available</span>
+          <div class="fp-days">
+            {% for day in p.get_working_days_list %}
+              <span class="day-badge">{{ day }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="fp-row">
+          <span class="fp-label">📧 Email</span>
+          <span class="fp-value fp-email">{{ p.email }}</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        <a href="/profile/{{ p.id }}/" class="btn-outline" style="font-size:0.8rem;padding:6px 14px;text-decoration:none;">View Profile</a>
+        {% if user.is_authenticated and p.id != user.id %}
+          <a href="/messages/{{ p.id }}/" class="btn-outline" style="font-size:0.8rem;padding:6px 14px;text-decoration:none;">💬 Message</a>
+          {% if user.role == "employer" and p.role == "worker" %}
+            <button class="btn-hire fp-hire-btn" onclick="window.location.href='/profile/{{ p.id }}/'">Hire</button>
+          {% elif user.role == "worker" and p.role == "employer" %}
+            <button class="btn-hire fp-hire-btn" style="background:var(--card);border:1px solid var(--yellow);color:var(--yellow);" onclick="window.location.href='/profile/{{ p.id }}/'">Request Job</button>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="no-profiles">
+    <p>No profiles registered yet. <button class="btn-yellow" onclick="openModal('register')">Be the first!</button></p>
+  </div>
+  {% endif %}
+</section>
+
+<!-- HIRELINK CARE -->
+<section id="care">
+  <div class="care">
+    <div class="care-text">
+      <h2>🛡️ HireLink CARE</h2>
+      <p>Need help? Report disputes, resolve conflicts, and get professional support from our dedicated care team.</p>
+    </div>
+    <div class="care-actions">
+      <a href="/report-dispute/" class="btn-black" style="text-decoration:none;">Report a Dispute</a>
+      <a href="/hirelink-care/" class="btn-black" style="text-decoration:none;background:rgba(0,0,0,0.15);color:#000;border:2px solid rgba(0,0,0,0.2);">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE SECTION (guests only) -->
+{% if not user.is_authenticated %}
+<section id="profile">
+  <div class="profile-page">
+    <div class="profile-section-title">PROFILE</div>
+    <div class="role-toggle">
+      <p>I am a:</p>
+      <div class="toggle-btns">
+        <button class="toggle-btn active" id="empBtn" onclick="toggleRole('employer')">💼 Employer</button>
+        <button class="toggle-btn inactive" id="workerBtn" onclick="toggleRole('worker')">🧑 Worker</button>
+      </div>
+    </div>
+    <div class="care-banner" onclick="openModal('login')">
+      <div class="care-banner-left">
+        <div class="icon">🛡️</div>
+        <div><h4>HireLink Care</h4><p>Need help? Report disputes and get professional support</p></div>
+      </div>
+      <div class="arrow">›</div>
+    </div>
+    <div class="guest-card">
+      <div class="guest-avatar">👤</div>
+      <div class="guest-name">Guest User</div>
+      <button class="btn-signin" onclick="openModal('login')">Sign In / Register</button>
+    </div>
+    <div class="menu-items">
+      <div class="menu-item" onclick="openModal('login')"><div class="menu-item-left"><span class="menu-item-icon">👤</span><span class="menu-item-label">Edit Profile</span></div><span class="menu-item-arrow">›</span></div>
+      <div class="menu-item"><div class="menu-item-left"><span class="menu-item-icon">🔔</span><span class="menu-item-label">Notifications</span></div><span class="menu-item-arrow">›</span></div>
+      <div class="menu-item"><div class="menu-item-left"><span class="menu-item-icon">🔒</span><span class="menu-item-label">Privacy & Security</span></div><span class="menu-item-arrow">›</span></div>
+      <div class="menu-item"><div class="menu-item-left"><span class="menu-item-icon">❓</span><span class="menu-item-label">Help & Support</span></div><span class="menu-item-arrow">›</span></div>
+    </div>
+  </div>
+  <div class="bottom-nav-preview">
+    <div class="nav-tab" onclick="scrollTo(0,0)"><span class="nav-tab-icon">🔍</span>Browse</div>
+    <div class="nav-tab"><span class="nav-tab-icon">❤️</span>Favorites</div>
+    <div class="nav-tab"><span class="nav-tab-icon">📅</span>Bookings</div>
+    <div class="nav-tab"><span class="nav-tab-icon">👛</span>Wallet</div>
+    <div class="nav-tab active"><span class="nav-tab-icon">👤</span>Profile</div>
+  </div>
+</section>
+{% endif %}
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-label">Reviews</div>
+  <h2 class="section-title">WHAT PEOPLE SAY</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"HireLink helped me land 3 jobs in my first week. The profile setup was super easy and employers actually reach out to you!"</p><div class="testimonial-author"><div class="t-avatar">AJ</div><div><div class="t-name">Amara Johnson</div><div class="t-role">Graphic Designer</div></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"As an employer, I found qualified workers within 24 hours. The booking system and HireLink Care make everything stress-free."</p><div class="testimonial-author"><div class="t-avatar">MO</div><div><div class="t-name">Michael Ofori</div><div class="t-role">Business Owner</div></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"Finally a platform that takes disputes seriously. HireLink Care resolved my issue in under 2 hours. Highly recommend."</p><div class="testimonial-author"><div class="t-avatar">SB</div><div><div class="t-name">Sarah Boateng</div><div class="t-role">Freelance Writer</div></div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HireLink</div>
+  <div class="footer-links">
+    <a href="#">About</a><a href="#">Careers</a><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 HireLink. All rights reserved.</div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="modalTitle">WELCOME BACK</h2>
+    <p id="modalSub">Sign in to your HireLink account</p>
+
+    <div class="tab-switcher">
+      <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" id="registerTab" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Role selector (register only) -->
+    <div id="roleSelect" style="display:none;">
+      <div class="modal-role-select">
+        <button class="modal-role-btn active" id="roleEmp" onclick="selectRole('employer')">💼 Employer</button>
+        <button class="modal-role-btn" id="roleWork" onclick="selectRole('worker')">🧑 Worker</button>
+      </div>
+    </div>
+
+    <!-- Common fields -->
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="fieldEmail" placeholder="you@example.com" />
+    </div>
+    <div class="form-group" id="nameField" style="display:none;">
+      <label>Full Name</label>
+      <input type="text" id="fieldName" placeholder="Your full name" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="fieldPassword" placeholder="••••••••" />
+    </div>
+
+    <!-- Extra fields (register only) -->
+    <div id="extraFields" style="display:none;">
+      <div class="form-group">
+        <label>Skills / Profession</label>
+        <input type="text" id="fieldSkills" placeholder="e.g. Plumbing, Electrical, Design" />
+        <small style="color:var(--muted);font-size:0.75rem;">Separate multiple skills with commas</small>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label>Hourly Rate (KES)</label>
+          <input type="number" id="fieldWage" placeholder="e.g. 500" min="0" />
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label>Hours per Day</label>
+          <input type="number" id="fieldHours" placeholder="e.g. 8" min="1" max="24" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Working Days</label>
+        <div class="days-picker" id="daysPicker">
+          <button type="button" class="day-btn" data-day="Mon">Mon</button>
+          <button type="button" class="day-btn" data-day="Tue">Tue</button>
+          <button type="button" class="day-btn" data-day="Wed">Wed</button>
+          <button type="button" class="day-btn" data-day="Thu">Thu</button>
+          <button type="button" class="day-btn" data-day="Fri">Fri</button>
+          <button type="button" class="day-btn" data-day="Sat">Sat</button>
+          <button type="button" class="day-btn" data-day="Sun">Sun</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn">Sign In</button>
+  </div>
+</div>
+
+<script>
+// ── Cookie helper ──
+function getCookie(name) {
+  let v = null;
+  document.cookie.split(';').forEach(c => {
+    const t = c.trim();
+    if (t.startsWith(name + '=')) v = decodeURIComponent(t.slice(name.length + 1));
+  });
+  return v;
+}
+
+// ── Days picker ──
+document.querySelectorAll('.day-btn').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('selected'));
+});
+
+function getSelectedDays() {
+  return [...document.querySelectorAll('.day-btn.selected')].map(b => b.dataset.day).join(',');
+}
+
+// ── Submit (login / register) ──
+document.getElementById('submitBtn').addEventListener('click', async function () {
+  const isLogin = document.getElementById('loginTab').classList.contains('active');
+  const url     = isLogin ? '/login/' : '/register/';
+
+  const payload = {
+    email:    document.getElementById('fieldEmail').value,
+    password: document.getElementById('fieldPassword').value,
+  };
+
+  if (!isLogin) {
+    payload.full_name    = document.getElementById('fieldName').value;
+    payload.role         = document.getElementById('roleWork').classList.contains('active') ? 'worker' : 'employer';
+    payload.skills       = document.getElementById('fieldSkills').value;
+    payload.hourly_wage  = document.getElementById('fieldWage').value || null;
+    payload.hours_per_day = document.getElementById('fieldHours').value || null;
+    payload.working_days = getSelectedDays();
+  }
+
+  try {
+    const res  = await fetch(url, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(data.message);
+      closeModal();
+      location.reload();
+    } else {
+      const errMsg = Object.values(data.errors).flat().join('\n');
+      alert('Error:\n' + errMsg);
+    }
+  } catch (err) {
+    alert('Something went wrong. Please try again.');
+  }
+});
+
+// ── Search ──
+async function searchWorkers() {
+  const query     = document.getElementById('workerSearchInput').value.trim();
+  if (!query) return;
+  const res       = await fetch(`/search-workers/?q=${encodeURIComponent(query)}`);
+  const data      = await res.json();
+  const container = document.getElementById('searchResults');
+
+  if (data.workers.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted);margin-top:12px;">No results found. Try a different search.</p>';
+    return;
+  }
+
+  container.innerHTML = data.workers.map(w => `
+    <div class="worker-card">
+      <div class="worker-card-info">
+        <h4>${w.full_name} <span style="font-size:0.75rem;color:var(--yellow);font-weight:500;">${w.role}</span></h4>
+        ${w.skills ? `<div class="wc-skills">${w.skills.split(',').map(s => `<span class="tag">${s.trim()}</span>`).join('')}</div>` : ''}
+        <div class="wc-meta">
+          ${w.hourly_wage !== 'N/A' ? `<span>💰 KES ${w.hourly_wage}/hr</span>` : ''}
+          ${w.hours_per_day !== 'N/A' ? `<span>⏱ ${w.hours_per_day}hrs/day</span>` : ''}
+          ${w.working_days ? `<span>📅 ${w.working_days}</span>` : ''}
+        </div>
+      </div>
+      <button class="btn-hire" onclick="window.location.href='/make-payment/?worker_id=${w.id}'">Hire</button>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('workerSearchInput');
+  if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') searchWorkers(); });
+});
+
+// ── Modal helpers ──
+function openModal(mode) { document.getElementById('authModal').classList.add('open'); switchTab(mode); }
+function closeModal()     { document.getElementById('authModal').classList.remove('open'); }
+
+function switchTab(tab) {
+  const loginTab    = document.getElementById('loginTab');
+  const registerTab = document.getElementById('registerTab');
+  const roleSelect  = document.getElementById('roleSelect');
+  const nameField   = document.getElementById('nameField');
+  const extraFields = document.getElementById('extraFields');
+  const modalTitle  = document.getElementById('modalTitle');
+  const modalSub    = document.getElementById('modalSub');
+  const submitBtn   = document.getElementById('submitBtn');
+
+  if (tab === 'login') {
+    loginTab.classList.add('active');    registerTab.classList.remove('active');
+    roleSelect.style.display  = 'none'; nameField.style.display = 'none';
+    extraFields.style.display = 'none';
+    modalTitle.textContent = 'WELCOME BACK';
+    modalSub.textContent   = 'Sign in to your HireLink account';
+    submitBtn.textContent  = 'Sign In';
+  } else {
+    registerTab.classList.add('active'); loginTab.classList.remove('active');
+    roleSelect.style.display  = 'block'; nameField.style.display = 'block';
+    extraFields.style.display = 'block';
+    modalTitle.textContent = 'JOIN HireLink';
+    modalSub.textContent   = 'Create your free account today';
+    submitBtn.textContent  = 'Create Account';
+  }
+}
+
+function selectRole(role) {
+  document.getElementById('roleEmp').classList.toggle('active',  role === 'employer');
+  document.getElementById('roleWork').classList.toggle('active', role === 'worker');
+}
+function toggleRole(role) {
+  document.getElementById('empBtn').classList.toggle('active',    role === 'employer');
+  document.getElementById('empBtn').classList.toggle('inactive',  role !== 'employer');
+  document.getElementById('workerBtn').classList.toggle('active',   role === 'worker');
+  document.getElementById('workerBtn').classList.toggle('inactive', role !== 'worker');
+}
+
+document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// ── Profile panel ──
+function openProfilePanel(){
+  document.getElementById('profilePanel').classList.add('open');
+  document.getElementById('panelOverlay').classList.add('open');
+}
+function closeProfilePanel(){
+  document.getElementById('profilePanel').classList.remove('open');
+  document.getElementById('panelOverlay').classList.remove('open');
+}
+
+// ── Bell notifications ──
+function toggleBellDropdown(){
+  const dd = document.getElementById('bellDropdown');
+  dd.classList.toggle('open');
+  if(dd.classList.contains('open')) loadBellNotifs();
+}
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.bell-wrap');
+  if(wrap && !wrap.contains(e.target)) document.getElementById('bellDropdown').classList.remove('open');
+});
+async function loadBellNotifs(){
+  try{
+    const res  = await fetch('/notifications/unread/');
+    const data = await res.json();
+    const badge = document.getElementById('bellBadge');
+    const panelUnread = document.getElementById('panelUnread');
+    if(data.count > 0){ badge.style.display='flex'; badge.textContent=data.count; }
+    else badge.style.display='none';
+    if(panelUnread) panelUnread.textContent = data.count;
+    const list = document.getElementById('bellList');
+    if(data.notifications.length === 0){
+      list.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem;">All caught up! 🎉</div>';
+    } else {
+      list.innerHTML = data.notifications.map(n => `
+        <div class="bell-notif-item" onclick="markRead(${n.id},'${n.link}')">
+          <div class="bell-notif-title">${n.title}</div>
+          ${n.body ? `<div class="bell-notif-body">${n.body.substring(0,60)}${n.body.length>60?'...':''}</div>` : ''}
+          <div class="bell-notif-time">${n.created_at}</div>
+        </div>
+      `).join('');
+    }
+  } catch(e){}
+}
+async function markRead(id, link){
+  await fetch(`/notifications/${id}/read/`,{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}});
+  if(link && link !== 'None' && link !== '') window.location.href = link;
+  else loadBellNotifs();
+}
+
+// ── Status toggle ──
+async function setStatus(status){
+  const res  = await fetch('/toggle-status/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({status})});
+  const data = await res.json();
+  if(data.success){
+    document.querySelectorAll('.stbtn').forEach(b => { b.classList.remove('stbtn-active','stbtn-off'); });
+    const labels = { available:'🟢 Available', unavailable:'🔴 Unavailable', hiring:'🔵 Hiring', not_hiring:'🔴 Not Hiring' };
+    document.querySelectorAll('.stbtn').forEach(b => {
+      if(b.getAttribute('onclick').includes(status)) b.classList.add('stbtn-active');
+      else b.classList.add('stbtn-off');
+    });
+  }
+}
+
+// ── Delete account ──
+function openDeleteModal()  { document.getElementById('deleteModal').classList.add('open'); closeProfilePanel(); }
+function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('open'); }
+async function confirmDelete(){
+  const password = document.getElementById('deletePassword').value;
+  const status   = document.getElementById('deleteStatus');
+  if(!password){ status.style.color='#ef5350'; status.textContent='⚠️ Enter your password.'; return; }
+  status.style.color='var(--yellow)'; status.textContent='Deleting...';
+  try{
+    const res  = await fetch('/delete-account/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({password})});
+    const data = await res.json();
+    if(data.success){ status.style.color='#4caf50'; status.textContent='✅ Deleted. Redirecting...'; setTimeout(()=>window.location.href='/',1500); }
+    else{ status.style.color='#ef5350'; status.textContent='❌ '+data.error; }
+  }catch(e){ status.style.color='#ef5350'; status.textContent='❌ Something went wrong.'; }
+}
+
+// Poll bell every 30s
+{% if user.is_authenticated %}
+loadBellNotifs();
+setInterval(loadBellNotifs, 30000);
+{% endif %}
+
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+    <h2 style="color:#ef5350;">⚠️ DELETE ACCOUNT</h2>
+    <p>This is <strong style="color:#ef5350;">permanent</strong> and cannot be undone.</p>
+    <div class="form-group" style="margin-top:16px;">
+      <label>Confirm your password</label>
+      <input type="password" id="deletePassword" placeholder="Enter your password" />
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button class="btn-outline" onclick="closeDeleteModal()" style="flex:1;">Cancel</button>
+      <button onclick="confirmDelete()" style="flex:1;padding:14px;border-radius:10px;background:#ef5350;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:700;border:none;cursor:pointer;">Yes, Delete</button>
+    </div>
+    <div id="deleteStatus" style="margin-top:12px;font-size:0.85rem;text-align:center;"></div>
+  </div>
+</div>
+
+</body>
+</html>

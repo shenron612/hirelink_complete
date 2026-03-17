@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HireLink – Notifications</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+{% load static %}<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<style>
+.page-wrap{padding:100px 48px 60px;max-width:800px;margin:0 auto;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;}
+.page-header h1{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:2px;}
+.notif-list{display:flex;flex-direction:column;gap:12px;}
+.notif-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;gap:16px;align-items:flex-start;transition:all 0.2s;position:relative;}
+.notif-card.unread{border-color:var(--yellow);background:rgba(245,200,0,0.04);}
+.notif-card:hover{transform:translateY(-2px);}
+.notif-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.icon-hire_request{background:rgba(245,200,0,0.15);}
+.icon-hire_accepted{background:rgba(76,175,80,0.15);}
+.icon-hire_rejected{background:rgba(239,83,80,0.15);}
+.icon-job_request{background:rgba(33,150,243,0.15);}
+.icon-job_accepted{background:rgba(76,175,80,0.15);}
+.icon-job_rejected{background:rgba(239,83,80,0.15);}
+.icon-message{background:rgba(156,39,176,0.15);}
+.icon-general{background:var(--card2);}
+.notif-body{flex:1;}
+.notif-title{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.notif-text{color:var(--muted);font-size:0.85rem;line-height:1.5;margin-bottom:8px;}
+.notif-time{font-size:0.75rem;color:var(--muted);}
+.notif-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.btn-accept{padding:8px 18px;border-radius:8px;background:#4caf50;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.82rem;border:none;cursor:pointer;transition:all 0.2s;}
+.btn-accept:hover{background:#388e3c;}
+.btn-reject{padding:8px 18px;border-radius:8px;background:rgba(239,83,80,0.15);color:#ef5350;border:1px solid #ef5350;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.btn-reject:hover{background:#ef5350;color:#fff;}
+.btn-pay{padding:8px 18px;border-radius:8px;background:var(--yellow);color:var(--black);font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.82rem;border:none;cursor:pointer;}
+.unread-dot{width:10px;height:10px;background:var(--yellow);border-radius:50%;position:absolute;top:16px;right:16px;}
+.empty-state{text-align:center;padding:80px 20px;color:var(--muted);}
+.empty-state .big-icon{font-size:4rem;margin-bottom:16px;}
+.tab-bar{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:24px;}
+.tab-bar button{flex:1;padding:10px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;}
+.tab-bar button.active{background:var(--yellow);color:var(--black);}
+@media(max-width:768px){.page-wrap{padding:90px 20px 40px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="/">Hire<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/messages/">Messages</a></li>
+    <li><a href="/notifications/" style="color:var(--yellow);">Notifications</a></li>
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:0.85rem;font-weight:600;color:var(--yellow);">👋 {{user.full_name}}</span>
+      <a href="/logout/" class="btn-outline" style="font-size:0.78rem;padding:6px 14px;">Logout</a>
+    </div>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>🔔 NOTIFICATIONS</h1>
+    <button class="btn-yellow" onclick="markAllRead()" style="font-size:0.85rem;padding:8px 18px;">Mark all read</button>
+  </div>
+
+  <div class="tab-bar">
+    <button class="active" onclick="filterNotifs('all',this)">All</button>
+    <button onclick="filterNotifs('unread',this)">Unread</button>
+    <button onclick="filterNotifs('hire',this)">Hire</button>
+    <button onclick="filterNotifs('message',this)">Messages</button>
+  </div>
+
+  <!-- Pending hire requests (worker sees) -->
+  {% if hire_requests_pending %}
+  <div style="margin-bottom:24px;">
+    <div style="font-size:0.75rem;letter-spacing:2px;color:var(--yellow);font-weight:600;text-transform:uppercase;margin-bottom:12px;">⏳ Pending Hire Requests</div>
+    {% for hr in hire_requests_pending %}
+    <div class="notif-card unread" id="hr-{{hr.id}}">
+      <div class="notif-icon icon-hire_request">💼</div>
+      <div class="notif-body">
+        <div class="notif-title">{{hr.employer.full_name}} wants to hire you</div>
+        <div class="notif-text">{{hr.message|default:"No message provided."}}</div>
+        <div class="notif-time">{{hr.created_at|date:"M d, H:i"}}</div>
+        <div class="notif-actions">
+          <button class="btn-accept" onclick="respondHire({{hr.id}},'accept')">✓ Accept</button>
+          <button class="btn-reject" onclick="respondHire({{hr.id}},'reject')">✗ Decline</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Pending job requests (employer sees) -->
+  {% if job_requests_pending %}
+  <div style="margin-bottom:24px;">
+    <div style="font-size:0.75rem;letter-spacing:2px;color:var(--yellow);font-weight:600;text-transform:uppercase;margin-bottom:12px;">⏳ Pending Job Requests</div>
+    {% for jr in job_requests_pending %}
+    <div class="notif-card unread" id="jr-{{jr.id}}">
+      <div class="notif-icon icon-job_request">🙋</div>
+      <div class="notif-body">
+        <div class="notif-title">{{jr.worker.full_name}} is requesting a job</div>
+        <div class="notif-text">{{jr.message|default:"No message provided."}}</div>
+        <div class="notif-time">{{jr.created_at|date:"M d, H:i"}}</div>
+        <div class="notif-actions">
+          <button class="btn-accept" onclick="respondJob({{jr.id}},'accept')">✓ Accept</button>
+          <button class="btn-reject" onclick="respondJob({{jr.id}},'reject')">✗ Decline</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- All notifications -->
+  {% if notifications %}
+  <div class="notif-list" id="notifList">
+    {% for n in notifications %}
+    <div class="notif-card {% if not n.is_read %}unread{% endif %}" data-type="{{n.notif_type}}" data-read="{{n.is_read|yesno:'true,false'}}" onclick="readNotif({{n.id}},this,'{{n.link}}')">
+      {% if not n.is_read %}<div class="unread-dot"></div>{% endif %}
+      <div class="notif-icon icon-{{n.notif_type}}">
+        {% if n.notif_type == 'hire_request' %}💼
+        {% elif n.notif_type == 'hire_accepted' %}✅
+        {% elif n.notif_type == 'hire_rejected' %}❌
+        {% elif n.notif_type == 'job_request' %}🙋
+        {% elif n.notif_type == 'job_accepted' %}🎉
+        {% elif n.notif_type == 'job_rejected' %}😔
+        {% elif n.notif_type == 'message' %}💬
+        {% else %}🔔{% endif %}
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">{{n.title}}</div>
+        {% if n.body %}<div class="notif-text">{{n.body}}</div>{% endif %}
+        <div class="notif-time">{{n.created_at|date:"M d, Y · H:i"}}</div>
+        {% if n.notif_type == 'hire_accepted' and n.related_id %}
+        <div class="notif-actions">
+          <button class="btn-pay" onclick="event.stopPropagation();window.location.href='/make-payment/?hire_id={{n.related_id}}'">💳 Pay Now</button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="big-icon">🔔</div>
+    <p>No notifications yet. They'll show up here.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function getCookie(n){let v=null;document.cookie.split(';').forEach(c=>{const t=c.trim();if(t.startsWith(n+'='))v=decodeURIComponent(t.slice(n.length+1))});return v;}
+
+async function respondHire(id,action){
+  const res=await fetch(`/hire-request/${id}/respond/`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({action})});
+  const data=await res.json();
+  if(data.success){document.getElementById('hr-'+id).remove();alert(data.message);}
+  else alert(data.error);
+}
+
+async function respondJob(id,action){
+  const res=await fetch(`/job-request/${id}/respond/`,{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({action})});
+  const data=await res.json();
+  if(data.success){document.getElementById('jr-'+id).remove();location.reload();}
+  else alert(data.error);
+}
+
+async function readNotif(id,el,link){
+  await fetch(`/notifications/${id}/read/`,{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}});
+  el.classList.remove('unread');
+  const dot=el.querySelector('.unread-dot');
+  if(dot)dot.remove();
+  if(link&&link!='None')window.location.href=link;
+}
+
+async function markAllRead(){
+  await fetch('/notifications/mark-all-read/',{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}});
+  location.reload();
+}
+
+function filterNotifs(type,btn){
+  document.querySelectorAll('.tab-bar button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#notifList .notif-card').forEach(card=>{
+    if(type==='all') card.style.display='flex';
+    else if(type==='unread') card.style.display=card.dataset.read==='false'?'flex':'none';
+    else if(type==='hire') card.style.display=card.dataset.type.includes('hire')?'flex':'none';
+    else if(type==='message') card.style.display=card.dataset.type==='message'?'flex':'none';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HireLink – Report a Dispute</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<style>
+  .dispute-page {
+    min-height: 100vh;
+    padding: 100px 48px 60px;
+    background: var(--black);
+  }
+
+  .dispute-header {
+    max-width: 700px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .dispute-header .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(239,83,80,0.1);
+    border: 1px solid rgba(239,83,80,0.3);
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 0.8rem; color: #ef5350;
+    font-weight: 600; margin-bottom: 20px;
+  }
+
+  .dispute-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: 2px; line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .dispute-header h1 span { color: #ef5350; }
+
+  .dispute-header p {
+    color: var(--muted); font-size: 1rem; line-height: 1.7;
+  }
+
+  .dispute-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+  }
+
+  .dispute-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .dispute-form .form-group {
+    margin-bottom: 20px;
+  }
+
+  .dispute-form label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .dispute-form input,
+  .dispute-form select,
+  .dispute-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .dispute-form input:focus,
+  .dispute-form select:focus,
+  .dispute-form textarea:focus {
+    border-color: #ef5350;
+  }
+
+  .dispute-form input::placeholder,
+  .dispute-form textarea::placeholder {
+    color: var(--muted);
+  }
+
+  .dispute-form select option {
+    background: var(--card);
+    color: var(--white);
+  }
+
+  .dispute-form textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+
+  .severity-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .severity-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .severity-btn:hover { border-color: var(--yellow); color: var(--white); }
+  .severity-btn.low.selected    { background: rgba(76,175,80,0.15); color: #4caf50; border-color: #4caf50; }
+  .severity-btn.medium.selected { background: rgba(255,152,0,0.15); color: #ff9800; border-color: #ff9800; }
+  .severity-btn.high.selected   { background: rgba(239,83,80,0.15); color: #ef5350; border-color: #ef5350; }
+
+  .btn-submit-dispute {
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    background: #ef5350;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn-submit-dispute:hover { background: #c62828; transform: translateY(-1px); }
+  .btn-submit-dispute:disabled { background: #555; cursor: not-allowed; transform: none; }
+
+  .status-msg {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .status-msg.success { background: rgba(76,175,80,0.15); color: #4caf50; display: block; }
+  .status-msg.error   { background: rgba(239,83,80,0.15); color: #ef5350; display: block; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; transition: color 0.2s;
+    margin-bottom: 32px;
+  }
+  .back-link:hover { color: var(--white); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  .section-hint {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: rgba(245,200,0,0.06);
+    border-left: 3px solid var(--yellow);
+    border-radius: 0 8px 8px 0;
+  }
+
+  @media (max-width: 768px) {
+    .dispute-page { padding: 90px 20px 40px; }
+    .dispute-card { padding: 24px 20px; }
+    .dispute-form .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">Hire<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="/#how">How it Works</a></li>
+    <li><a href="/#browse">Browse Talent</a></li>
+    <li><a href="/#all-profiles">All Profiles</a></li>
+    <li><a href="/hirelink-care/">HireLink Care</a></li>
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <span style="font-size:0.85rem;font-weight:600;color:#f5c518;">👋 {{ user.full_name }}</span>
+        <a href="/logout/" class="btn-outline" style="font-size:0.78rem;padding:4px 14px;">Logout</a>
+      </div>
+    {% else %}
+      <a href="/" class="btn-outline">Sign In</a>
+      <a href="/" class="btn-yellow">Get Started</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="dispute-page">
+  <a href="/" class="back-link">← Back to HireLink</a>
+
+  <div class="dispute-header">
+    <div class="badge">🛡️ HireLink Care</div>
+    <h1>REPORT A <span>DISPUTE</span></h1>
+    <p>Had an issue with a job, payment, or worker? Submit your dispute and our care team will investigate and resolve it within 24 hours.</p>
+  </div>
+
+  <div class="dispute-card">
+    <div class="section-hint">
+      💡 Be as detailed as possible — the more information you provide, the faster we can resolve your case.
+    </div>
+
+    <div class="dispute-form">
+      <!-- Personal Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Full Name</label>
+          <input type="text" id="dispName" placeholder="e.g. John Doe"
+            value="{% if user.is_authenticated %}{{ user.full_name }}{% endif %}"/>
+        </div>
+        <div class="form-group">
+          <label>Your Email</label>
+          <input type="email" id="dispEmail" placeholder="you@example.com"
+            value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"/>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <!-- Dispute Info -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dispute Type</label>
+          <select id="dispType">
+            <option value="">Select a category</option>
+            <option>Payment not received</option>
+            <option>Work not completed</option>
+            <option>Poor quality of work</option>
+            <option>Unprofessional behaviour</option>
+            <option>Scam / Fraud</option>
+            <option>Overcharging</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Other Party's Name</label>
+          <input type="text" id="dispOther" placeholder="Worker or Employer name"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Amount Involved (KES) — if applicable</label>
+        <input type="number" id="dispAmount" placeholder="e.g. 5000" min="0"/>
+      </div>
+
+      <div class="form-group">
+        <label>Severity</label>
+        <div class="severity-picker">
+          <button type="button" class="severity-btn low"    onclick="setSeverity('low')">🟢 Low</button>
+          <button type="button" class="severity-btn medium" onclick="setSeverity('medium')">🟡 Medium</button>
+          <button type="button" class="severity-btn high"   onclick="setSeverity('high')">🔴 High</button>
+        </div>
+        <input type="hidden" id="dispSeverity"/>
+      </div>
+
+      <div class="form-group">
+        <label>Describe the Issue</label>
+        <textarea id="dispDescription" placeholder="Explain what happened in as much detail as possible. Include dates, amounts, and any relevant context..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>What outcome are you hoping for?</label>
+        <textarea id="dispOutcome" placeholder="e.g. Full refund, re-completion of work, formal warning to the other party..." style="min-height:80px;"></textarea>
+      </div>
+
+      <button class="btn-submit-dispute" id="submitDispute" onclick="submitDispute()">
+        🛡️ Submit Dispute Report
+      </button>
+
+      <div class="status-msg" id="disputeStatus"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HireLink</div>
+  <div class="footer-links">
+    <a href="#">About</a><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 HireLink. All rights reserved.</div>
+</footer>
+
+<script>
+let selectedSeverity = '';
+
+function setSeverity(level) {
+  selectedSeverity = level;
+  document.getElementById('dispSeverity').value = level;
+  document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.severity-btn.${level}`).classList.add('selected');
+}
+
+function getCookie(name) {
+  let v = null;
+  document.cookie.split(';').forEach(c => {
+    const t = c.trim();
+    if (t.startsWith(name + '=')) v = decodeURIComponent(t.slice(name.length + 1));
+  });
+  return v;
+}
+
+async function submitDispute() {
+  const name        = document.getElementById('dispName').value.trim();
+  const email       = document.getElementById('dispEmail').value.trim();
+  const type        = document.getElementById('dispType').value;
+  const other       = document.getElementById('dispOther').value.trim();
+  const description = document.getElementById('dispDescription').value.trim();
+  const outcome     = document.getElementById('dispOutcome').value.trim();
+  const status      = document.getElementById('disputeStatus');
+  const btn         = document.getElementById('submitDispute');
+
+  status.className   = 'status-msg';
+  status.textContent = '';
+
+  if (!name || !email || !type || !other || !description) {
+    status.className   = 'status-msg error';
+    status.textContent = '⚠️ Please fill in all required fields.';
+    return;
+  }
+
+  btn.disabled     = true;
+  btn.textContent  = 'Submitting...';
+
+  // Simulate submission (replace with real API call if needed)
+  await new Promise(r => setTimeout(r, 1200));
+
+  status.className   = 'status-msg success';
+  status.textContent = '✅ Your dispute has been submitted! Our care team will contact you within 24 hours.';
+  btn.textContent    = '✅ Submitted';
+}
+</script>
+</body>
+</html>

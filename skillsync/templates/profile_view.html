@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>{{profile.full_name}} – HireLink</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+{% load static %}<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<style>
+.pv-wrap{padding:100px 48px 60px;max-width:700px;margin:0 auto;}
+.pv-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;margin-bottom:24px;}
+.pv-top{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;}
+.pv-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:var(--black);flex-shrink:0;}
+.pv-name{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:1px;line-height:1;}
+.pv-role-badge{display:inline-block;padding:4px 12px;border-radius:100px;font-size:0.78rem;font-weight:700;margin-top:6px;}
+.badge-worker{background:rgba(245,200,0,0.15);color:var(--yellow);}
+.badge-employer{background:rgba(255,255,255,0.08);color:var(--muted);}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:0.75rem;font-weight:600;margin-left:8px;}
+.status-available{background:rgba(76,175,80,0.15);color:#4caf50;}
+.status-unavailable{background:rgba(239,83,80,0.15);color:#ef5350;}
+.status-hiring{background:rgba(33,150,243,0.15);color:#2196f3;}
+.status-not_hiring{background:rgba(239,83,80,0.15);color:#ef5350;}
+.pv-bio{color:var(--muted);font-size:0.92rem;line-height:1.7;margin-top:16px;}
+.pv-section{margin-top:24px;}
+.pv-section-title{font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);font-weight:600;margin-bottom:12px;}
+.pv-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.pv-label{font-size:0.8rem;color:var(--muted);font-weight:600;min-width:110px;}
+.pv-val{font-size:0.9rem;color:var(--white);}
+.tags{display:flex;flex-wrap:wrap;gap:6px;}
+.day-badge{background:rgba(245,200,0,0.12);color:var(--yellow);border:1px solid rgba(245,200,0,0.2);padding:2px 8px;border-radius:6px;font-size:0.72rem;font-weight:600;}
+.action-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn-msg{padding:12px 24px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--white);font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;font-size:0.9rem;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-msg:hover{border-color:var(--yellow);color:var(--yellow);}
+.btn-action{padding:12px 28px;border-radius:10px;background:var(--yellow);color:var(--black);font-family:'DM Sans',sans-serif;font-weight:700;border:none;cursor:pointer;font-size:0.9rem;transition:all 0.2s;}
+.btn-action:hover{background:var(--yellow-dark);}
+.btn-action:disabled{background:var(--card2);color:var(--muted);cursor:not-allowed;}
+.job-ad-box{background:rgba(245,200,0,0.06);border:1px solid rgba(245,200,0,0.2);border-radius:12px;padding:20px;margin-top:12px;}
+.job-ad-box p{font-size:0.9rem;line-height:1.7;color:var(--muted);}
+.stats-row{display:flex;gap:24px;margin-top:20px;}
+.stat-box{background:var(--card2);border-radius:10px;padding:16px 20px;text-align:center;flex:1;}
+.stat-box .num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--yellow);}
+.stat-box .lbl{font-size:0.75rem;color:var(--muted);}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dark);border:1px solid var(--border);border-radius:20px;padding:32px;width:90%;max-width:440px;position:relative;}
+.modal-close{position:absolute;top:12px;right:16px;background:var(--card);border:none;color:var(--white);width:28px;height:28px;border-radius:50%;font-size:0.9rem;cursor:pointer;}
+.modal h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;margin-bottom:8px;}
+.modal p{color:var(--muted);font-size:0.85rem;margin-bottom:16px;}
+.modal textarea{width:100%;padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;min-height:100px;resize:vertical;box-sizing:border-box;}
+.modal textarea:focus{border-color:var(--yellow);}
+@media(max-width:768px){.pv-wrap{padding:90px 20px 40px;}.pv-card{padding:24px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="/">Hire<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/messages/">Messages</a></li>
+    <li><a href="/notifications/">Notifications</a></li>
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:0.85rem;font-weight:600;color:var(--yellow);">👋 {{user.full_name}}</span>
+      <a href="/logout/" class="btn-outline" style="font-size:0.78rem;padding:6px 14px;">Logout</a>
+    </div>
+    {% else %}
+    <a href="/" class="btn-yellow">Sign In</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="pv-wrap">
+  <a href="javascript:history.back()" style="display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:0.85rem;margin-bottom:24px;">← Back</a>
+
+  <div class="pv-card">
+    <div class="pv-top">
+      <div class="pv-avatar">{{profile.full_name|slice:":2"|upper}}</div>
+      <div style="flex:1;">
+        <div class="pv-name">{{profile.full_name}}</div>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:6px;">
+          <span class="pv-role-badge badge-{{profile.role}}">
+            {% if profile.role == 'worker' %}🧑 Worker{% else %}💼 Employer{% endif %}
+          </span>
+          <span class="status-badge status-{{profile.status}}">
+            {% if profile.status == 'available' %}🟢 Available
+            {% elif profile.status == 'unavailable' %}🔴 Unavailable
+            {% elif profile.status == 'hiring' %}🔵 Hiring
+            {% else %}🔴 Not Hiring{% endif %}
+          </span>
+        </div>
+        {% if profile.bio %}<div class="pv-bio">{{profile.bio}}</div>{% endif %}
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      {% if profile.role == 'employer' %}
+      <div class="stat-box"><div class="num">{{profile.hired_count}}</div><div class="lbl">Workers Hired</div></div>
+      {% else %}
+      <div class="stat-box"><div class="num">{{profile.jobs_count}}</div><div class="lbl">Jobs Completed</div></div>
+      {% endif %}
+      <div class="stat-box"><div class="num">{{profile.date_joined|date:"Y"}}</div><div class="lbl">Member Since</div></div>
+    </div>
+
+    <!-- Details -->
+    <div class="pv-section">
+      <div class="pv-section-title">Details</div>
+      {% if profile.skills %}
+      <div class="pv-row">
+        <span class="pv-label">🛠 Skills</span>
+        <div class="tags">{% for s in profile.get_skills_list %}<span class="tag">{{s}}</span>{% endfor %}</div>
+      </div>
+      {% endif %}
+      {% if profile.hourly_wage %}
+      <div class="pv-row"><span class="pv-label">💰 Rate</span><span class="pv-val">KES {{profile.hourly_wage}}/hr</span></div>
+      {% endif %}
+      {% if profile.hours_per_day %}
+      <div class="pv-row"><span class="pv-label">⏱ Hours/day</span><span class="pv-val">{{profile.hours_per_day}} hrs</span></div>
+      {% endif %}
+      {% if profile.working_days %}
+      <div class="pv-row">
+        <span class="pv-label">📅 Available</span>
+        <div class="tags">{% for d in profile.get_working_days_list %}<span class="day-badge">{{d}}</span>{% endfor %}</div>
+      </div>
+      {% endif %}
+      <div class="pv-row"><span class="pv-label">📧 Email</span><span class="pv-val" style="color:var(--muted);">{{profile.email}}</span></div>
+    </div>
+
+    <!-- Employer job ad -->
+    {% if profile.role == 'employer' and profile.job_ad %}
+    <div class="pv-section">
+      <div class="pv-section-title">📢 Looking to Hire</div>
+      <div class="job-ad-box"><p>{{profile.job_ad}}</p></div>
+    </div>
+    {% endif %}
+
+    <!-- Action buttons -->
+    {% if user.is_authenticated and user.id != profile.id %}
+    <div class="action-bar">
+      <a href="/messages/{{profile.id}}/" class="btn-msg">💬 Message</a>
+
+      {% if user.role == 'employer' and profile.role == 'worker' %}
+        <!-- Employer hiring a worker -->
+        {% if hire_status == 'pending' %}
+          <button class="btn-action" disabled>⏳ Request Pending</button>
+        {% elif hire_status == 'accepted' %}
+          <button class="btn-action" onclick="window.location.href='/make-payment/?worker_id={{profile.id}}'">💳 Pay Now</button>
+        {% elif hire_status == 'rejected' %}
+          <button class="btn-action" onclick="openHireModal()">🔄 Request Again</button>
+        {% else %}
+          <button class="btn-action" onclick="openHireModal()">💼 Hire {{profile.full_name|truncatechars:12}}</button>
+        {% endif %}
+
+      {% elif user.role == 'worker' and profile.role == 'employer' %}
+        <!-- Worker requesting job from employer -->
+        {% if job_status == 'pending' %}
+          <button class="btn-action" disabled>⏳ Request Pending</button>
+        {% elif job_status == 'accepted' %}
+          <button class="btn-action" disabled style="background:rgba(76,175,80,0.2);color:#4caf50;">✅ Job Accepted</button>
+        {% elif job_status == 'rejected' %}
+          <button class="btn-action" onclick="openJobModal()">🔄 Request Again</button>
+        {% else %}
+          <button class="btn-action" onclick="openJobModal()">🙋 Request Job</button>
+        {% endif %}
+
+      {% endif %}
+      <!-- same role = no action button -->
+    </div>
+    {% elif not user.is_authenticated %}
+    <div class="action-bar">
+      <a href="/" class="btn-action">Sign In to Connect</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Hire modal -->
+<div class="modal-overlay" id="hireModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeHireModal()">✕</button>
+    <h3>💼 SEND HIRE REQUEST</h3>
+    <p>Send {{profile.full_name}} a message with your hire request. They'll be notified and can accept or decline.</p>
+    <textarea id="hireMsg" placeholder="e.g. Hi, I'd like to hire you for plumbing work this Saturday..."></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button class="btn-msg" onclick="closeHireModal()" style="flex:1;justify-content:center;">Cancel</button>
+      <button class="btn-action" onclick="submitHire()" style="flex:1;">Send Request</button>
+    </div>
+    <div id="hireStatus" style="margin-top:10px;font-size:0.85rem;text-align:center;"></div>
+  </div>
+</div>
+
+<!-- Job request modal -->
+<div class="modal-overlay" id="jobModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeJobModal()">✕</button>
+    <h3>🙋 REQUEST A JOB</h3>
+    <p>Send {{profile.full_name}} a job request. Tell them about yourself and why you're interested.</p>
+    <textarea id="jobMsg" placeholder="e.g. Hi, I saw your job ad and I'm very interested. I have 3 years experience in..."></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;">
+      <button class="btn-msg" onclick="closeJobModal()" style="flex:1;justify-content:center;">Cancel</button>
+      <button class="btn-action" onclick="submitJob()" style="flex:1;">Send Request</button>
+    </div>
+    <div id="jobStatus" style="margin-top:10px;font-size:0.85rem;text-align:center;"></div>
+  </div>
+</div>
+
+<script>
+function getCookie(n){let v=null;document.cookie.split(';').forEach(c=>{const t=c.trim();if(t.startsWith(n+'='))v=decodeURIComponent(t.slice(n.length+1))});return v;}
+function openHireModal(){document.getElementById('hireModal').classList.add('open');}
+function closeHireModal(){document.getElementById('hireModal').classList.remove('open');}
+function openJobModal(){document.getElementById('jobModal').classList.add('open');}
+function closeJobModal(){document.getElementById('jobModal').classList.remove('open');}
+
+async function submitHire(){
+  const msg=document.getElementById('hireMsg').value;
+  const status=document.getElementById('hireStatus');
+  status.textContent='Sending...';status.style.color='var(--yellow)';
+  const res=await fetch('/hire-request/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({worker_id:{{profile.id}},message:msg})});
+  const data=await res.json();
+  if(data.success){status.style.color='#4caf50';status.textContent='✅ '+data.message;setTimeout(()=>{closeHireModal();location.reload();},1500);}
+  else{status.style.color='#ef5350';status.textContent='❌ '+data.error;}
+}
+
+async function submitJob(){
+  const msg=document.getElementById('jobMsg').value;
+  const status=document.getElementById('jobStatus');
+  status.textContent='Sending...';status.style.color='var(--yellow)';
+  const res=await fetch('/job-request/',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},body:JSON.stringify({employer_id:{{profile.id}},message:msg})});
+  const data=await res.json();
+  if(data.success){status.style.color='#4caf50';status.textContent='✅ '+data.message;setTimeout(()=>{closeJobModal();location.reload();},1500);}
+  else{status.style.color='#ef5350';status.textContent='❌ '+data.error;}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HireLink Care – We've Got Your Back</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<style>
+  .care-page { background: var(--black); }
+
+  /* HERO */
+  .care-hero {
+    min-height: 60vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .care-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(245,200,0,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .care-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 0.8rem; color: var(--muted);
+    margin-bottom: 28px; animation: fadeUp 0.5s ease both;
+  }
+  .care-badge span { color: var(--yellow); font-weight: 600; }
+  .care-hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95; letter-spacing: 2px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+  .care-hero h1 em { font-style: normal; color: var(--yellow); display: block; }
+  .care-hero p {
+    max-width: 540px; margin: 24px auto 0;
+    font-size: 1.05rem; line-height: 1.7;
+    color: var(--muted);
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  .care-hero-cta {
+    margin-top: 36px;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+  .btn-report {
+    padding: 16px 40px; border-radius: 10px;
+    background: var(--yellow); color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    border: none; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: all 0.2s;
+  }
+  .btn-report:hover { background: var(--yellow-dark); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,200,0,0.3); }
+
+  /* HOW WE HELP */
+  .how-we-help {
+    padding: 80px 48px;
+    background: var(--dark);
+    text-align: center;
+  }
+  .help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+  .help-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px 24px;
+    text-align: left; transition: all 0.3s;
+  }
+  .help-card:hover { border-color: var(--yellow); transform: translateY(-3px); }
+  .help-icon {
+    font-size: 2rem; margin-bottom: 16px;
+    width: 52px; height: 52px; border-radius: 12px;
+    background: rgba(245,200,0,0.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .help-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .help-card p  { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  /* PROCESS */
+  .process-section { padding: 80px 48px; text-align: center; }
+  .process-steps {
+    display: flex; gap: 0;
+    justify-content: center; flex-wrap: wrap;
+    margin-top: 48px;
+  }
+  .process-step {
+    flex: 1; min-width: 180px; max-width: 240px;
+    padding: 28px 20px; position: relative;
+  }
+  .process-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; right: -14px; top: 40px;
+    color: var(--yellow); font-size: 1.4rem;
+  }
+  .p-num {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .process-step h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .process-step p  { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* GUARANTEE */
+  .guarantee-section {
+    padding: 80px 48px;
+    background: var(--dark);
+  }
+  .guarantee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px; margin-top: 48px;
+  }
+  .guarantee-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 20px;
+    text-align: center; transition: all 0.3s;
+  }
+  .guarantee-card:hover { border-color: var(--yellow); }
+  .g-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; color: var(--yellow);
+    letter-spacing: 1px; line-height: 1;
+    margin-bottom: 8px;
+  }
+  .guarantee-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+  .guarantee-card p  { font-size: 0.8rem; color: var(--muted); }
+
+  /* FAQ */
+  .faq-section { padding: 80px 48px; max-width: 760px; margin: 0 auto; }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 12px;
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item:hover { border-color: var(--yellow); }
+  .faq-question {
+    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; font-weight: 600; font-size: 0.95rem;
+    background: var(--card);
+  }
+  .faq-arrow { color: var(--yellow); font-size: 1.2rem; transition: transform 0.2s; }
+  .faq-answer {
+    padding: 0 24px;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    font-size: 0.88rem; color: var(--muted); line-height: 1.7;
+    background: var(--card);
+  }
+  .faq-item.open .faq-answer { max-height: 200px; padding: 0 24px 20px; }
+  .faq-item.open .faq-arrow  { transform: rotate(90deg); }
+
+  /* CTA BOTTOM */
+  .care-cta-bottom {
+    padding: 80px 48px;
+    text-align: center;
+    background: var(--yellow);
+  }
+  .care-cta-bottom h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--black); letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .care-cta-bottom p {
+    color: rgba(0,0,0,0.65); font-size: 1rem;
+    max-width: 480px; margin: 0 auto 32px; line-height: 1.7;
+  }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--white); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 768px) {
+    .care-hero, .how-we-help, .process-section, .guarantee-section, .care-cta-bottom { padding: 60px 20px; }
+    .faq-section { padding: 60px 20px; }
+    .process-step:not(:last-child)::after { display: none; }
+  }
+</style>
+</head>
+<body class="care-page">
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">Hire<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="/#how">How it Works</a></li>
+    <li><a href="/#browse">Browse Talent</a></li>
+    <li><a href="/#all-profiles">All Profiles</a></li>
+    <li><a href="/hirelink-care/" style="color:var(--yellow);">HireLink Care</a></li>
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <span style="font-size:0.85rem;font-weight:600;color:#f5c518;">👋 {{ user.full_name }}</span>
+        <a href="/logout/" class="btn-outline" style="font-size:0.78rem;padding:4px 14px;">Logout</a>
+      </div>
+    {% else %}
+      <a href="/" class="btn-outline">Sign In</a>
+      <a href="/" class="btn-yellow">Get Started</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="care-hero">
+  <div class="care-badge">🛡️ <span>HireLink Care</span> — Always in your corner</div>
+  <h1>WE'VE GOT<br><em>YOUR BACK.</em></h1>
+  <p>Every transaction on HireLink is protected. If something goes wrong, our dedicated care team steps in to investigate, mediate, and resolve — fast.</p>
+  <div class="care-hero-cta">
+    <a href="/report-dispute/" class="btn-report">Report a Dispute →</a>
+  </div>
+</section>
+
+<!-- HOW WE HELP -->
+<section class="how-we-help">
+  <div class="section-label">Protection</div>
+  <h2 class="section-title">HOW WE HELP</h2>
+  <p class="section-sub">HireLink Care covers every type of issue you might face on the platform.</p>
+  <div class="help-grid">
+    <div class="help-card">
+      <div class="help-icon">💸</div>
+      <h3>Payment Disputes</h3>
+      <p>Didn't receive payment for completed work? We investigate and mediate to ensure fair resolution.</p>
+    </div>
+    <div class="help-card">
+      <div class="help-icon">🔨</div>
+      <h3>Incomplete Work</h3>
+      <p>Hired someone who didn't finish the job? We hold parties accountable and help you recover costs.</p>
+    </div>
+    <div class="help-card">
+      <div class="help-icon">⚠️</div>
+      <h3>Fraud & Scams</h3>
+      <p>Spotted suspicious behaviour or been scammed? We investigate immediately and take action.</p>
+    </div>
+    <div class="help-card">
+      <div class="help-icon">🤝</div>
+      <h3>Conduct Issues</h3>
+      <p>Unprofessional behaviour, harassment, or misconduct — we take every report seriously.</p>
+    </div>
+    <div class="help-card">
+      <div class="help-icon">⭐</div>
+      <h3>Unfair Reviews</h3>
+      <p>Got a fake or retaliatory review? Submit evidence and we'll review and remove if necessary.</p>
+    </div>
+    <div class="help-card">
+      <div class="help-icon">📋</div>
+      <h3>Contract Breaches</h3>
+      <p>Terms agreed weren't honoured? Our team helps enforce agreements and find resolution.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section">
+  <div class="section-label">The Process</div>
+  <h2 class="section-title">HOW IT WORKS</h2>
+  <p class="section-sub">From submission to resolution — here's what happens when you file a dispute.</p>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="p-num">1</div>
+      <h4>Submit Report</h4>
+      <p>Fill in the dispute form with all relevant details and evidence.</p>
+    </div>
+    <div class="process-step">
+      <div class="p-num">2</div>
+      <h4>Acknowledgement</h4>
+      <p>We confirm receipt within 2 hours and assign a care agent.</p>
+    </div>
+    <div class="process-step">
+      <div class="p-num">3</div>
+      <h4>Investigation</h4>
+      <p>Both parties are contacted and evidence is reviewed fairly.</p>
+    </div>
+    <div class="process-step">
+      <div class="p-num">4</div>
+      <h4>Resolution</h4>
+      <p>A decision is made and communicated to all parties within 24hrs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEES -->
+<section class="guarantee-section">
+  <div class="section-label" style="text-align:center;">Our Promise</div>
+  <h2 class="section-title" style="text-align:center;">OUR GUARANTEES</h2>
+  <div class="guarantee-grid">
+    <div class="guarantee-card"><div class="g-num">2H</div><h4>Response Time</h4><p>Every dispute is acknowledged within 2 hours of submission.</p></div>
+    <div class="guarantee-card"><div class="g-num">24H</div><h4>Resolution Time</h4><p>Most cases are fully resolved within 24 hours.</p></div>
+    <div class="guarantee-card"><div class="g-num">100%</div><h4>Impartial</h4><p>Every case is reviewed fairly regardless of account history.</p></div>
+    <div class="guarantee-card"><div class="g-num">0</div><h4>Ignored Reports</h4><p>Every single report is read and responded to by a real person.</p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div style="text-align:center;">
+    <div class="section-label">Questions</div>
+    <h2 class="section-title">FREQUENTLY ASKED</h2>
+    <p class="section-sub">Everything you need to know about HireLink Care.</p>
+  </div>
+  <div style="margin-top:40px;">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">Who can file a dispute? <span class="faq-arrow">›</span></div>
+      <div class="faq-answer">Anyone registered on HireLink — both workers and employers — can file a dispute at any time. You don't need to be the paying party to report an issue.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">How long does resolution take? <span class="faq-arrow">›</span></div>
+      <div class="faq-answer">Most disputes are resolved within 24 hours. Complex cases involving fraud or large sums may take up to 72 hours. You'll receive updates throughout the process.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">What evidence should I provide? <span class="faq-arrow">›</span></div>
+      <div class="faq-answer">Screenshots of conversations, payment receipts, job agreements, photos of incomplete work, and any other relevant documentation all help speed up resolution.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">Can I appeal a decision? <span class="faq-arrow">›</span></div>
+      <div class="faq-answer">Yes. If you believe the outcome was unfair, you can request a re-review within 48 hours of the decision by replying to your resolution email with new evidence.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">Is HireLink Care free? <span class="faq-arrow">›</span></div>
+      <div class="faq-answer">Absolutely. HireLink Care is a free service available to all registered users. There are no fees to file a dispute or request mediation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="care-cta-bottom">
+  <h2>READY TO RESOLVE YOUR ISSUE?</h2>
+  <p>Don't let a bad experience go unaddressed. Our care team is standing by to help you get a fair outcome — fast.</p>
+  <a href="/report-dispute/" class="btn-black">Report a Dispute →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HireLink</div>
+  <div class="footer-links">
+    <a href="#">About</a><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 HireLink. All rights reserved.</div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const item = el.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
