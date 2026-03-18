@@ -79,8 +79,8 @@ AUTH_USER_MODEL = 'skillsync.User'
 
 # ── M-Pesa Daraja Settings ──
 # Replace these with your actual credentials from developer.safaricom.co.ke
-MPESA_CONSUMER_KEY    = 'nRSMGcOCiGtJSuTnkAstTcoY8mlhvqN4qCm8j0JvYfy3WUBe'
-MPESA_CONSUMER_SECRET = 'ebEHPGnUzwR9cONGjAewxCkMlvhIGIWCXTJMuvYQDVCuxes4CMZG0XKaiGLl0FHx'
+MPESA_CONSUMER_KEY    = 'V0KDhUyd99daizA3EjDEQuy4yZGXngkYLMKWC052oQuGGiB0'
+MPESA_CONSUMER_SECRET = 'f14092kQ0rfK5JVDzaxqG5x2ygAIiXAJOW8wEkepwXfbYQy5G8kbAhFvAddlao97'
 MPESA_SHORTCODE       = '174379'
 MPESA_PASSKEY         = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
 MPESA_CALLBACK_URL    = 'https://tigerishly-postlegal-lynda.ngrok-free.dev/mpesa-callback/'
