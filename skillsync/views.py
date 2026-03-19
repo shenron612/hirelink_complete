@@ -492,3 +492,18 @@ def report_dispute(request):
 
 def hirelink_care(request):
     return render(request, 'hirelink_care.html', {'user': request.user})
+
+def terms(request):
+    return render(request, 'terms.html')
+
+def about(request):
+    return render(request, 'about.html')
+
+def careers(request):
+    return render(request, 'careers.html')
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
+def contact(request):
+    return render(request, 'contact.html')

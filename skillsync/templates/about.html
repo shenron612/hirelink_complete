@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | HireLink Kenya</title>
+    <link rel="icon" href="../static/images/link.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --dark: #141414;
+            --card: #1c1c1c;
+            --yellow: #f5c800;
+            --yellow-dark: #d4ab00;
+            --white: #ffffff;
+            --muted: #888888;
+            --border: rgba(255,255,255,0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--yellow);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--yellow); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 120px 20px;
+            text-align: center;
+            background: linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.85)),
+                        url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            line-height: 1;
+            margin-bottom: 20px;
+            color: var(--yellow);
+        }
+        .hero p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: var(--muted);
+        }
+
+        /* --- GRID CONTENT --- */
+        .section-padding { padding: 100px 5%; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .info-card {
+            background: var(--card);
+            padding: 50px;
+            border-radius: 32px;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+        .info-card:hover { transform: translateY(-10px); }
+        .info-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--yellow);
+        }
+
+        /* --- FEATURES --- */
+        .features {
+            background: var(--dark);
+            text-align: center;
+        }
+        .feature-item {
+            padding: 30px;
+        }
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--yellow); color: var(--black); }
+        .btn-primary:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+        .btn-outline { background: transparent; color: var(--white); border: 1px solid var(--border); }
+        .btn-outline:hover { background: var(--card); }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <a href="/" class="btn-home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Back to Home
+        </a>
+     </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>EMPOWERING THE GIG ECONOMY</h1>
+            <p>HireLink is Kenya's premier bridge between skilled professionals and the businesses that need them. We make work work.</p>
+        </div>
+    </header>
+
+    <section class="section-padding container">
+        <div class="grid-2">
+            <div class="info-card">
+                <h3>Our Mission</h3>
+                <p>To eliminate the friction of finding reliable labor. We provide a platform where transparency, skill verification, and instant M-Pesa payments create a thriveable environment for everyone.</p>
+            </div>
+            <div class="info-card">
+                <h3>Our Tech</h3>
+                <p>Built for the modern Kenyan context, our platform features real-time STK-Push payments and an intelligent matching algorithm that connects you to talent in your specific locality.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding features">
+        <div class="container">
+            <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; margin-bottom: 60px;">WHY CHOOSE US</h2>
+            <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div class="feature-item">
+                    <div class="icon-box">⚡</div>
+                    <h4>Swift STK Push</h4>
+                    <p style="color: var(--muted); margin-top: 10px;">No more chasing invoices. Pay and get paid instantly via secure M-Pesa integration.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon-box">🛡️</div>
+                    <h4>Verified Profiles</h4>
+                    <p style="color: var(--muted); margin-top: 10px;">We vet our workers to ensure that "skilled labor" actually means high-quality results.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon-box">📍</div>
+                    <h4>Local Reach</h4>
+                    <p style="color: var(--muted); margin-top: 10px;">Find jobs or talent right in your neighborhood, from Nairobi to Kisumu and beyond.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding container" style="text-align: center;">
+        <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 3rem; margin-bottom: 30px;">READY TO TRANSFORM YOUR WORK LIFE?</h2>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+            <a href="/register" class="btn btn-primary">GET STARTED NOW</a>
+            <a href="https://www.youtube.com/embed/D69z_JDFUxw?si=KvFprfNkSaYlWEwC" class="btn btn-outline" target="_blank">BROWSE OPPORTUNITIES</a>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2026 HireLink Kenya. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

@@ -9,6 +9,11 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('delete-account/', views.delete_account, name='delete_account'),
+    path('terms/', views.terms, name='terms'),
+    path('contact/', views.contact, name='contact'),
+    path('careers/', views.careers, name='careers'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('about/', views.about, name='about'),
 
     # Search
     path('search-workers/', views.search_workers, name='search_workers'),

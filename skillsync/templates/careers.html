@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | Join the HireLink Team</title>
+    <link rel="icon" href="../static/images/link.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --dark: #141414;
+            --card: #1c1c1c;
+            --yellow: #f5c518;
+            --white: #ffffff;
+            --muted: #888888;
+            --border: rgba(255,255,255,0.07);
+        }
+          /* --- NEW NAV STYLE --- */
+        .top-nav {
+            padding: 30px 5%;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .btn-home {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            opacity: 0.7;
+        }
+        .btn-home:hover { opacity: 1; color: var(--yellow); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- HERO --- */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 10vw, 7rem);
+            color: var(--yellow);
+            line-height: 0.9;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* --- CULTURE --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        .culture-card {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+        }
+        .culture-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--yellow);
+            margin-bottom: 15px;
+        }
+
+        /* --- OPEN ROLES --- */
+        .roles-section { padding: 80px 0; }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--yellow);
+            display: inline-block;
+        }
+
+        .role-box {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            padding: 25px 35px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .role-box:hover {
+            border-color: var(--yellow);
+            background: var(--card);
+            transform: scale(1.01);
+        }
+        .role-info h4 { font-size: 1.2rem; margin-bottom: 5px; }
+        .role-info span { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
+        .apply-tag {
+            color: var(--yellow);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+        }
+
+        footer { text-align: center; padding: 60px 0; border-top: 1px solid var(--border); margin-top: 40px; }
+        .btn-yellow {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+     <nav class="top-nav">
+        <a href="/" class="btn-home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Back to Home
+        </a>
+     </nav>
+    <div class="container">
+        <header class="hero">
+            <h1>WE ARE <br> BUILDING THE FUTURE</h1>
+            <p>Join the team behind Kenya's fastest-growing labor marketplace. We're looking for innovators, thinkers, and doers.</p>
+        </header>
+
+        <div class="grid">
+            <div class="culture-card">
+                <h3>Innovation First</h3>
+                <p>We leverage cutting-edge tech like the M-Pesa Daraja API to solve real-world problems for thousands of Kenyans.</p>
+            </div>
+            <div class="culture-card">
+                <h3>Remote Friendly</h3>
+                <p>Work from Nairobi, Mombasa, or your favorite coffee shop. We value results over desk-time.</p>
+            </div>
+            <div class="culture-card">
+                <h3>Growth Obsessed</h3>
+                <p>We provide a learning budget for every employee to ensure you stay at the top of your game.</p>
+            </div>
+        </div>
+
+        <section class="roles-section">
+            <h2 class="section-title">CURRENT OPENINGS</h2>
+
+            <a href="#" class="role-box">
+                <div class="role-info">
+                    <h4>Senior Python/Django Developer</h4>
+                    <span>Engineering • Full-Time • Remote</span>
+                </div>
+                <div class="apply-tag">Apply Now →</div>
+            </a>
+
+            <a href="#" class="role-box">
+                <div class="role-info">
+                    <h4>UI/UX Product Designer</h4>
+                    <span>Design • Full-Time • Nairobi</span>
+                </div>
+                <div class="apply-tag">Apply Now →</div>
+            </a>
+
+            <a href="#" class="role-box">
+                <div class="role-info">
+                    <h4>Customer Success Specialist (HireLink Care)</h4>
+                    <span>Operations • Part-Time • Hybrid</span>
+                </div>
+                <div class="apply-tag">Apply Now →</div>
+            </a>
+
+            </section>
+
+        <footer>
+            <p style="margin-top: 40px; font-size: 0.8rem; color: var(--muted);">&copy; 2026 HireLink. Build something that matters.</p>
+        </footer>
+    </div>
+
+</body>
+</html>

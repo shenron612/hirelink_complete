@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HireLink Terms — Find Work. Hire Smart.</title>
+  <link rel="icon" href="../static/images/link.png">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --yellow: #F5C518;
+    --white: #ffffff;
+    --gray: #1a1a1a;
+    --gray-mid: #2a2a2a;
+    --gray-text: #888;
+    --border: #2a2a2a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--yellow); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--gray-text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-welcome {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--yellow);
+  }
+  .btn-logout {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--gray-text);
+    padding: 7px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+  }
+  .btn-logout:hover { border-color: var(--white); color: var(--white); }
+
+  /* HERO BANNER */
+  .terms-hero {
+    background: var(--gray);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .terms-hero::before {
+    content: 'T&C';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 220px;
+    color: rgba(255,255,255,0.03);
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .terms-badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .terms-hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .terms-hero h1 span { color: var(--yellow); }
+  .terms-hero .meta {
+    color: var(--gray-text);
+    font-size: 13px;
+    letter-spacing: 0.3px;
+  }
+  .terms-hero .meta strong { color: var(--white); }
+
+  /* LAYOUT */
+  .page-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+    align-items: start;
+  }
+
+  /* SIDEBAR TOC */
+  .toc {
+    position: sticky;
+    top: 88px;
+    padding: 40px 0 40px 0;
+    border-right: 1px solid var(--border);
+    padding-right: 40px;
+  }
+  .toc-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 20px;
+  }
+  .toc ul { list-style: none; }
+  .toc ul li {
+    margin-bottom: 4px;
+  }
+  .toc ul li a {
+    color: var(--gray-text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .toc ul li a:hover {
+    color: var(--white);
+    background: var(--gray-mid);
+  }
+  .toc ul li a.active {
+    color: var(--yellow);
+    background: rgba(245,197,24,0.08);
+  }
+  .toc-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    color: var(--yellow);
+    min-width: 18px;
+  }
+
+  /* CONTENT */
+  .terms-content {
+    padding: 40px 0 0 48px;
+  }
+
+  .section {
+    margin-bottom: 56px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.4s ease both;
+  }
+  .section:last-child { border-bottom: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--yellow);
+    line-height: 1;
+    opacity: 0.6;
+  }
+  .section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .section p {
+    color: #ccc;
+    font-size: 15px;
+    margin-bottom: 16px;
+    line-height: 1.8;
+  }
+  .section p:last-child { margin-bottom: 0; }
+
+  .section ul {
+    list-style: none;
+    margin: 16px 0;
+  }
+  .section ul li {
+    color: #ccc;
+    font-size: 15px;
+    padding: 10px 0 10px 24px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    line-height: 1.7;
+  }
+  .section ul li:last-child { border-bottom: none; }
+  .section ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--yellow);
+    font-size: 13px;
+  }
+
+  .highlight-box {
+    background: var(--gray);
+    border-left: 3px solid var(--yellow);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .highlight-box p {
+    color: var(--white) !important;
+    font-weight: 600;
+    margin: 0 !important;
+    font-size: 14px !important;
+  }
+
+  .warning-box {
+    background: rgba(245,197,24,0.06);
+    border: 1px solid rgba(245,197,24,0.2);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-radius: 6px;
+  }
+  .warning-box p {
+    color: var(--yellow) !important;
+    font-weight: 600;
+    margin: 0 !important;
+    font-size: 14px !important;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray);
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--yellow); }
+  footer p {
+    color: var(--gray-text);
+    font-size: 12px;
+  }
+  .footer-btns {
+    display: flex;
+    gap: 12px;
+  }
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 22px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    padding: 10px 22px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--white); }
+
+  @media (max-width: 768px) {
+    .page-layout { grid-template-columns: 1fr; padding: 0 20px 60px; }
+    .toc { display: none; }
+    .terms-content { padding: 32px 0 0; }
+    nav { padding: 0 20px; }
+    .terms-hero { padding: 40px 20px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+    <a href="/" class="btn-home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Back to Home
+    </a>
+</nav>
+
+<!-- HERO -->
+<div class="terms-hero">
+  <div class="terms-badge">Legal</div>
+  <h1>TERMS &amp;<br><span>CONDITIONS.</span></h1>
+  <p class="meta">Last Updated: <strong>January 1, 2025</strong> &nbsp;·&nbsp; Effective immediately upon account creation</p>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="toc">
+    <p class="toc-title">Contents</p>
+    <ul>
+      <li><a href="#definitions" class="active"><span class="toc-num">01</span>Definitions</a></li>
+      <li><a href="#eligibility"><span class="toc-num">02</span>Eligibility</a></li>
+      <li><a href="#registration"><span class="toc-num">03</span>Account Registration</a></li>
+      <li><a href="#nature"><span class="toc-num">04</span>Nature of the Platform</a></li>
+      <li><a href="#worker-conduct"><span class="toc-num">05</span>Worker Conduct</a></li>
+      <li><a href="#employer-conduct"><span class="toc-num">06</span>Employer Conduct</a></li>
+      <li><a href="#payments"><span class="toc-num">07</span>Payments & Fees</a></li>
+      <li><a href="#ip"><span class="toc-num">08</span>Intellectual Property</a></li>
+      <li><a href="#privacy"><span class="toc-num">09</span>Privacy</a></li>
+      <li><a href="#liability"><span class="toc-num">10</span>Limitation of Liability</a></li>
+      <li><a href="#termination"><span class="toc-num">11</span>Termination</a></li>
+      <li><a href="#governing"><span class="toc-num">12</span>Governing Law</a></li>
+    </ul>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="terms-content">
+
+    <div class="section">
+      <p>Welcome to <strong style="color:var(--white)">HireLink</strong>. These Terms and Conditions ("Terms") govern your use of our website, platform, and services that connect individuals seeking work ("Workers") with individuals or organizations offering work opportunities ("Employers"). By accessing or using HireLink, you agree to comply with and be bound by these Terms. If you do not agree with these Terms, please do not use the platform.</p>
+    </div>
+
+    <div class="section" id="definitions">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Definitions</h2>
+      </div>
+      <p>For the purposes of these Terms:</p>
+      <ul>
+        <li><strong style="color:var(--white)">Platform</strong> refers to the website and services provided by HireLink.</li>
+        <li><strong style="color:var(--white)">Worker</strong> refers to an individual offering services, skills, or labor through the platform.</li>
+        <li><strong style="color:var(--white)">Employer</strong> refers to an individual or organization seeking to hire Workers through the platform.</li>
+        <li><strong style="color:var(--white)">User</strong> refers to any person accessing or using the platform.</li>
+      </ul>
+    </div>
+
+    <div class="section" id="eligibility">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Eligibility</h2>
+      </div>
+      <p>To use the platform, you must meet the following requirements:</p>
+      <ul>
+        <li>Be at least 18 years old</li>
+        <li>Provide accurate and complete registration information</li>
+        <li>Have the legal authority to enter into contracts</li>
+      </ul>
+      <p>By creating an account, you represent that all information you provide is true and accurate.</p>
+    </div>
+
+    <div class="section" id="registration">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Account Registration</h2>
+      </div>
+      <p>To access certain services, users may be required to create an account. You agree to:</p>
+      <ul>
+        <li>Keep your login credentials confidential</li>
+        <li>Be responsible for all activity under your account</li>
+        <li>Notify us immediately of any unauthorized access</li>
+      </ul>
+      <div class="warning-box">
+        <p>⚠ We reserve the right to suspend or terminate accounts that violate these Terms.</p>
+      </div>
+    </div>
+
+    <div class="section" id="nature">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Nature of the Platform</h2>
+      </div>
+      <p>HireLink is a marketplace that facilitates connections between Workers and Employers. We are not an employer, staffing agency, or party to any agreement between Users. We do not guarantee employment, the quality of work, or the accuracy of profiles.</p>
+      <div class="highlight-box">
+        <p>HireLink acts solely as an intermediary — all agreements are directly between Workers and Employers.</p>
+      </div>
+    </div>
+
+    <div class="section" id="worker-conduct">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Worker Conduct</h2>
+      </div>
+      <p>As a Worker on the platform, you agree to:</p>
+      <ul>
+        <li>Represent your skills and experience honestly</li>
+        <li>Fulfill commitments made to Employers</li>
+        <li>Maintain professional conduct in all interactions</li>
+        <li>Not engage in fraudulent or deceptive practices</li>
+        <li>Comply with all applicable laws and regulations</li>
+      </ul>
+    </div>
+
+    <div class="section" id="employer-conduct">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Employer Conduct</h2>
+      </div>
+      <p>As an Employer on the platform, you agree to:</p>
+      <ul>
+        <li>Post accurate and lawful job listings</li>
+        <li>Treat Workers with respect and professionalism</li>
+        <li>Honor agreed-upon compensation and terms</li>
+        <li>Comply with employment and anti-discrimination laws</li>
+        <li>Not engage in exploitative or unlawful hiring practices</li>
+      </ul>
+    </div>
+
+    <div class="section" id="payments">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Payments &amp; Fees</h2>
+      </div>
+      <p>HireLink may charge service fees for use of certain platform features. All fees will be disclosed prior to payment. Users are responsible for all applicable taxes. Payment disputes must be raised within 30 days of the transaction.</p>
+      <p>HireLink reserves the right to modify its fee structure with reasonable notice to users.</p>
+    </div>
+
+    <div class="section" id="ip">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Intellectual Property</h2>
+      </div>
+      <p>All content on the HireLink platform — including logos, design, code, and text — is owned by HireLink and protected under applicable intellectual property law. Users retain ownership of content they submit but grant HireLink a non-exclusive license to display and distribute that content on the platform.</p>
+    </div>
+
+    <div class="section" id="privacy">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Privacy</h2>
+      </div>
+      <p>Your use of the platform is also governed by our Privacy Policy, which is incorporated into these Terms by reference. By using HireLink, you consent to the collection and use of your information as described in the Privacy Policy.</p>
+    </div>
+
+    <div class="section" id="liability">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Limitation of Liability</h2>
+      </div>
+      <p>To the fullest extent permitted by law, HireLink shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the platform. Our total liability shall not exceed the fees you paid to HireLink in the past 12 months.</p>
+      <div class="warning-box">
+        <p>⚠ The platform is provided "as is" without warranties of any kind, expressed or implied.</p>
+      </div>
+    </div>
+
+    <div class="section" id="termination">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <h2>Termination</h2>
+      </div>
+      <p>HireLink may suspend or terminate your access at any time, with or without notice, if you violate these Terms or engage in conduct deemed harmful to the platform or its users. You may also terminate your account at any time by contacting support.</p>
+    </div>
+
+    <div class="section" id="governing">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <h2>Governing Law</h2>
+      </div>
+      <p>These Terms shall be governed by and construed in accordance with applicable law. Any disputes arising from these Terms shall be resolved through binding arbitration, except where prohibited by law.</p>
+      <p>If you have questions about these Terms, please contact us at <strong style="color:var(--yellow)">legal@hirelink.com</strong></p>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HIRE<span>LINK</span></div>
+  <p>© 2025 HireLink. All rights reserved.</p>
+</footer>
+
+<script>
+  // Active TOC highlight on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const links = document.querySelectorAll('.toc a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    links.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
