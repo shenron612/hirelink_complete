@@ -91,7 +91,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
 .step p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
-/* ── BROWSE ── */
+
 .browse { padding: 80px 48px; background: var(--dark); }
 .browse-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
 .profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
@@ -105,7 +105,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .profile-rate { font-size: 0.85rem; color: var(--muted); }
 .profile-rate strong { color: var(--white); }
 
-/* ── ALL PROFILES SECTION ── */
+
 .all-profiles-section { padding: 80px 48px; background: var(--black); text-align: center; }
 .all-profiles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-top: 48px; text-align: left; }
 .full-profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; transition: all 0.3s; display: flex; flex-direction: column; gap: 16px; }
