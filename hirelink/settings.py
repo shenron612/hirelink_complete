@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-+@zzx5k$!5%2h#c&0c%*zpg@$#@lmd@7zj)t9dzpnsxkg#6^0!')
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,6 +76,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'skillsync.User'
+
 
 # ── M-Pesa Daraja Settings ──
 # Replace these with your actual credentials from developer.safaricom.co.ke
