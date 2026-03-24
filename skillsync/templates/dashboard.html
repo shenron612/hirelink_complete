@@ -425,36 +425,90 @@
       <input type="password" id="fieldPassword" placeholder="••••••••" />
     </div>
 
-    <!-- Extra fields (register only) -->
-    <div id="extraFields" style="display:none;">
-      <div class="form-group">
-        <label>Skills / Profession</label>
-        <input type="text" id="fieldSkills" placeholder="e.g. Plumbing, Electrical, Design" />
-        <small style="color:var(--muted);font-size:0.75rem;">Separate multiple skills with commas</small>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:1;">
-          <label>Hourly Rate (KES)</label>
-          <input type="number" id="fieldWage" placeholder="e.g. 500" min="0" />
-        </div>
-        <div class="form-group" style="flex:1;">
-          <label>Hours per Day</label>
-          <input type="number" id="fieldHours" placeholder="e.g. 8" min="1" max="24" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Working Days</label>
-        <div class="days-picker" id="daysPicker">
-          <button type="button" class="day-btn" data-day="Mon">Mon</button>
-          <button type="button" class="day-btn" data-day="Tue">Tue</button>
-          <button type="button" class="day-btn" data-day="Wed">Wed</button>
-          <button type="button" class="day-btn" data-day="Thu">Thu</button>
-          <button type="button" class="day-btn" data-day="Fri">Fri</button>
-          <button type="button" class="day-btn" data-day="Sat">Sat</button>
-          <button type="button" class="day-btn" data-day="Sun">Sun</button>
-        </div>
-      </div>
+    <!-- WORKER fields -->
+<div id="workerFields" style="display:none;">
+  <div style="background:rgba(245,200,0,0.06);border:1px solid rgba(245,200,0,0.15);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:0.82rem;color:var(--muted);">
+    🧑 Tell employers what you do and what you charge
+  </div>
+  <div class="form-group">
+    <label>Your Skills</label>
+    <input type="text" id="fieldSkills" placeholder="e.g. Plumbing, Welding, Painting" />
+    <small style="color:var(--muted);font-size:0.75rem;">Separate with commas</small>
+  </div>
+  <div class="form-row">
+    <div class="form-group" style="flex:1;">
+      <label>Hourly Rate (KES)</label>
+      <input type="number" id="fieldWage" placeholder="e.g. 500" min="0" />
     </div>
+    <div class="form-group" style="flex:1;">
+      <label>Hours per Day</label>
+      <input type="number" id="fieldHours" placeholder="e.g. 8" min="1" max="24" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Working Days</label>
+    <div class="days-picker" id="daysPicker">
+      <button type="button" class="day-btn" data-day="Mon">Mon</button>
+      <button type="button" class="day-btn" data-day="Tue">Tue</button>
+      <button type="button" class="day-btn" data-day="Wed">Wed</button>
+      <button type="button" class="day-btn" data-day="Thu">Thu</button>
+      <button type="button" class="day-btn" data-day="Fri">Fri</button>
+      <button type="button" class="day-btn" data-day="Sat">Sat</button>
+      <button type="button" class="day-btn" data-day="Sun">Sun</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Short Bio (optional)</label>
+    <input type="text" id="fieldWorkerBio" placeholder="e.g. 5 years experience in residential plumbing" />
+  </div>
+</div>
+
+<!-- EMPLOYER fields -->
+<div id="employerFields" style="display:none;">
+  <div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:0.82rem;color:var(--muted);">
+    💼 Tell workers about your business and what you're looking for
+  </div>
+  <div class="form-group">
+    <label>Business / Company Name (optional)</label>
+    <input type="text" id="fieldCompany" placeholder="e.g. Nairobi Builders Ltd" />
+  </div>
+  <div class="form-group">
+    <label>Industry / Sector</label>
+    <select id="fieldIndustry" style="width:100%;padding:14px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;">
+      <option value="">Select your industry</option>
+      <option>Construction & Real Estate</option>
+      <option>Technology & IT</option>
+      <option>Healthcare</option>
+      <option>Education</option>
+      <option>Hospitality & Tourism</option>
+      <option>Manufacturing</option>
+      <option>Agriculture</option>
+      <option>Retail & Commerce</option>
+      <option>Finance & Banking</option>
+      <option>Transport & Logistics</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Skills / Roles You Want to Hire</label>
+    <input type="text" id="fieldJobAd" placeholder="e.g. Electrician, Plumber, Driver" />
+    <small style="color:var(--muted);font-size:0.75rem;">Shows on your profile so workers can find you</small>
+  </div>
+  <div class="form-row">
+    <div class="form-group" style="flex:1;">
+      <label>Workers Needed</label>
+      <input type="number" id="fieldWorkersNeeded" placeholder="e.g. 3" min="1" />
+    </div>
+    <div class="form-group" style="flex:1;">
+      <label>Budget per Worker (KES/hr)</label>
+      <input type="number" id="fieldBudget" placeholder="e.g. 600" min="0" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Brief Description (optional)</label>
+    <input type="text" id="fieldEmployerBio" placeholder="e.g. Construction company based in Nairobi" />
+  </div>
+</div>
 
     <button class="btn-submit" id="submitBtn">Sign In</button>
   </div>
@@ -491,12 +545,21 @@ document.getElementById('submitBtn').addEventListener('click', async function ()
   };
 
   if (!isLogin) {
-    payload.full_name    = document.getElementById('fieldName').value;
-    payload.role         = document.getElementById('roleWork').classList.contains('active') ? 'worker' : 'employer';
-    payload.skills       = document.getElementById('fieldSkills').value;
-    payload.hourly_wage  = document.getElementById('fieldWage').value || null;
-    payload.hours_per_day = document.getElementById('fieldHours').value || null;
-    payload.working_days = getSelectedDays();
+    const role = document.getElementById('roleWork').classList.contains('active') ? 'worker' : 'employer';
+    payload.full_name = document.getElementById('fieldName').value;
+    payload.role      = role;
+    if (role === 'worker') {
+      payload.skills        = document.getElementById('fieldSkills').value;
+      payload.hourly_wage   = document.getElementById('fieldWage').value || null;
+      payload.hours_per_day = document.getElementById('fieldHours').value || null;
+      payload.working_days  = getSelectedDays();
+      payload.bio           = document.getElementById('fieldWorkerBio').value;
+    } else {
+      payload.skills      = document.getElementById('fieldJobAd').value;
+      payload.job_ad      = document.getElementById('fieldJobAd').value;
+      payload.hourly_wage = document.getElementById('fieldBudget').value || null;
+      payload.bio         = document.getElementById('fieldEmployerBio').value + ' | ' + document.getElementById('fieldCompany').value + ' | ' + document.getElementById('fieldIndustry').value;
+    }
   }
 
   try {
@@ -587,6 +650,8 @@ function switchTab(tab) {
 function selectRole(role) {
   document.getElementById('roleEmp').classList.toggle('active',  role === 'employer');
   document.getElementById('roleWork').classList.toggle('active', role === 'worker');
+  document.getElementById('workerFields').style.display   = role === 'worker'   ? 'block' : 'none';
+  document.getElementById('employerFields').style.display = role === 'employer' ? 'block' : 'none';
 }
 function toggleRole(role) {
   document.getElementById('empBtn').classList.toggle('active',    role === 'employer');
