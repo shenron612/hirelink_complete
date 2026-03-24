@@ -16,7 +16,7 @@ body { background: var(--black); color: var(--white); font-family: 'DM Sans', sa
 ::-webkit-scrollbar-track { background: var(--black); }
 ::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 2px; }
 
-/* ── NAV ── */
+
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 3px; color: var(--yellow); text-decoration: none; }
 .logo span { color: var(--white); }
@@ -29,7 +29,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .btn-yellow { padding: 10px 24px; border-radius: 8px; border: none; background: var(--yellow); color: var(--black); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
 .btn-yellow:hover { background: var(--yellow-dark); transform: translateY(-1px); }
 
-/* ── WORKER SEARCH ── */
+
 .worker-search { padding: 100px 5% 60px; background: var(--dark); border-bottom: 1px solid var(--border); }
 .search-container { max-width: 700px; margin: 0 auto; text-align: center; }
 .search-container h3 { font-size: 1.8rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
