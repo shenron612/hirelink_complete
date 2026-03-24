@@ -606,7 +606,7 @@ async function searchWorkers() {
           ${w.working_days ? `<span>📅 ${w.working_days}</span>` : ''}
         </div>
       </div>
-      <button class="btn-hire" onclick="window.location.href='/make-payment/?worker_id=${w.id}'">Hire</button>
+      <button class="btn-hire" onclick="window.location.href='/profile/${w.id}/'">View Profile</button>
     </div>
   `).join('');
 }
